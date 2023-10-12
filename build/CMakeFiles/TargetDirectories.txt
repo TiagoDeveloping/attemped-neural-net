@@ -1,0 +1,3 @@
+/Users/tiago/Documents/Developing/attemped neural net/build/CMakeFiles/Neural.dir
+/Users/tiago/Documents/Developing/attemped neural net/build/CMakeFiles/edit_cache.dir
+/Users/tiago/Documents/Developing/attemped neural net/build/CMakeFiles/rebuild_cache.dir

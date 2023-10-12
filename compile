@@ -1,0 +1,18 @@
+#!/bin/bash
+
+search_dir="."
+output_executable="run"
+
+cpp_files=$(find "$search_dir" -type f -name "*.cpp")
+
+if [ -n "$cpp_files" ]; then
+  g++ -o "$output_executable" $cpp_files
+
+  if [ $? -eq 0 ]; then
+    echo "Compilation successful. Executable '$output_executable' created."
+  else
+    echo "Compilation failed."
+  fi
+else
+  echo "No .cpp files found in '$search_dir' and its subdirectories."
+fi
