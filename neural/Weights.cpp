@@ -6,12 +6,6 @@
 #include "Weights.hpp"
 
 /**
- * @brief Load single-dimensional double arrays from a file and store them in a map.
- * 
- * @param filename The name of the file to load data from.
- * @return A map that associates keys (strings) with single-dimensional double arrays.
- */
-/**
  * Load weights from a file.
  * @param filename The name of the file to load weights from.
  * @return A map that associates keys (integers) with single-dimensional double arrays.
@@ -25,8 +19,6 @@ WeightsMap loadWeightsFromFile(const std::string& filename) {
         return result;
     }
 
-    int key;
-    Weights data;
     std::string line;
 
     while (std::getline(file, line)) {
@@ -34,32 +26,27 @@ WeightsMap loadWeightsFromFile(const std::string& filename) {
             continue;
         }
 
+        int key; // Declare key here
         if (line[0] == '\t') {
             double value;
             std::istringstream ss(line);
 
             while (ss >> value) {
-                data.push_back(value);
+                result[key].push_back(value); // Store value in the appropriate key's vector
             }
         } else {
             try {
                 key = std::stoi(line);
-                data.clear();
+                result[key] = Weights(); // Initialize the key's vector
             } catch (const std::invalid_argument& e) {
                 std::cerr << "Error: Invalid key format in the file." << std::endl;
-                continue;
             }
         }
-    }
-
-    if (!data.empty()) {
-        result[key] = data;
     }
 
     file.close(); // Close the file
     return result;
 }
-
 
 /**
  * @brief Save single-dimensional double arrays to a file.
@@ -79,6 +66,7 @@ void writeWeightsToFile(const std::string& filename, const WeightsMap& data) {
             for (const double value : entry.second) {
                 file << value << ' ';
             }
+            file << "\n";
         }
         file << "\n";
         file.close(); // Close the file after writing

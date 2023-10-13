@@ -33,24 +33,46 @@ int main() {
         std::cout << "found: " << MATRIX_IMAGE_GRAYSCALE << " at file: " << MATRICES_FILENAME << "\n";
     }
     mapMatrix(imageMatrix, 0, 1);
-    imageMatrix->prettyPrint();
 
     std::vector<double> singleDimensionalImage = imageMatrix->toSingleDimension();
 
-    WeightsMap weightsMap;
+    WeightsMap weightsMap = loadWeightsFromFile(WEIGHTS_FILENAME);
     
-    Weights* inputLayerWeights = getRandomWeights(singleDimensionalImage.size(), 0, 1);
+    Weights* inputLayerWeights;
+    if (weightsMap.find(0) == weightsMap.end()) {
+        inputLayerWeights = getRandomWeights(singleDimensionalImage.size(), 0, 1);
+        weightsMap[0] = *inputLayerWeights;
+    } else {
+        inputLayerWeights = new Weights;
+        *inputLayerWeights = weightsMap[0];
+    }
 
-    weightsMap[0] = *inputLayerWeights;
+    Weights* firstLayerWeights;
+    if (weightsMap.find(1) == weightsMap.end()) {
+        firstLayerWeights = getRandomWeights(singleDimensionalImage.size(), 0, 1);
+        weightsMap[1] = *firstLayerWeights;
+    } else {
+        firstLayerWeights = new Weights;
+        *firstLayerWeights = weightsMap[1];
+    }
+
+    Weights* outputLayerWeights;
+    if (weightsMap.find(2) == weightsMap.end()) {
+        outputLayerWeights = getRandomWeights(4, 0, 1);
+        weightsMap[2] = *outputLayerWeights;
+    } else {
+        outputLayerWeights = new Weights;
+        *outputLayerWeights = weightsMap[2];
+    }
 
     writeWeightsToFile(WEIGHTS_FILENAME, weightsMap);
-
 
     double neuron0 = forwardPropagation(singleDimensionalImage, *inputLayerWeights);
 
     std::cout << "neuron0: " << neuron0 << "\n";
 
-
+    delete firstLayerWeights;
+    delete outputLayerWeights;
     delete inputLayerWeights;
     delete imageMatrix;
 
