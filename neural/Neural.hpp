@@ -10,6 +10,8 @@
 
 double* convolute(Matrix* input, Matrix* kernel);
 
-double* weightedSum(std::vector<double> input, Weights weights, int neuron_index);
+double weightedSum(const std::vector<double>& input, const Weights& weights);
+
+double forwardPropagation(const std::vector<double>& input, const Weights& weights);
 
 #endif

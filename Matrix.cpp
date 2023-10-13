@@ -71,6 +71,20 @@ void Matrix::subMatrix(Matrix* matrix, int fromx, int tox, int fromy, int toy) {
 }
 
 /**
+ * @brief transform to 1d vector
+ * 
+ * @return std::vector<double> 
+ */
+std::vector<double> Matrix::toSingleDimension() {
+    std::vector<double> singleDimension;
+    for (const std::vector<double>& row : matrix) {
+        for (int element : row) {
+            singleDimension.push_back(element);
+        }
+    }
+}
+
+/**
  * @brief inverses(divides every value by 1)
  */
 void Matrix::inverse() {

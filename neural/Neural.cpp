@@ -3,6 +3,9 @@
 
 #include "Neural.hpp"
 #include "../Matrix.hpp"
+#include "Weights.hpp"
+
+
 
 /**
  * @brief Convluates the values
@@ -24,11 +27,38 @@ double* convolute(Matrix* input, Matrix* kernel) {
     return val;
 }
 
-double* weightedSum(std::vector<double> input, Weights weights, int neuron_index) {
-    double* weighted_sum = new double;
-    *weighted_sum = 0.0;
-    for (int i = 0; i < input.size(); i++) {
-        *weighted_sum += input[i] * weights[i][neuron_index];
+/**
+ * @brief Propegate single neuron forward.
+ * 
+ * @param input vector<double> of the values the neuron gets
+ * @param weights weights for each input value the neuron gets
+ * @return double 
+ */
+double forwardPropagation(const std::vector<double>& input, const Weights& weights) {
+    double weighted_sum = weightedSum(input, weights);
+
+    double output = ReLU(weighted_sum);
+
+    return output;
+}
+
+/**
+ * @brief returns weighted sum
+ * 
+ * @param input 
+ * @param weights 
+ * @return double 
+ */
+double weightedSum(const std::vector<double>& input, const Weights& weights) {
+    if (input.size() != weights.size()) {
+        throw std::runtime_error("Input size does not match weight size.");
     }
-    return weighted_sum;
+
+    double sum = 0.0;
+
+    for (size_t i = 0; i < input.size(); i++) {
+        sum += input[i] * weights[i];
+    }
+
+    return sum;
 }

@@ -108,6 +108,8 @@ class Matrix {
         double get(int x, int y);
         void put(int x, int y, double val);
 
+        std::vector<double> toSingleDimension();
+
         int dimensions();
         double* range();
         void addToMap(std::string key, std::map<std::string, std::vector<std::vector<double> > >* map);
