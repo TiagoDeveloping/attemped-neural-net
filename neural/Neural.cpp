@@ -23,3 +23,12 @@ double* convolute(Matrix* input, Matrix* kernel) {
     }
     return val;
 }
+
+double* weightedSum(std::vector<double> input, Weights weights, int neuron_index) {
+    double* weighted_sum = new double;
+    *weighted_sum = 0.0;
+    for (int i = 0; i < input.size(); i++) {
+        *weighted_sum += input[i] * weights[i][neuron_index];
+    }
+    return weighted_sum;
+}
