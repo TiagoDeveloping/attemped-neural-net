@@ -82,6 +82,7 @@ std::vector<double> Matrix::toSingleDimension() {
             singleDimension.push_back(element);
         }
     }
+    return singleDimension;
 }
 
 /**

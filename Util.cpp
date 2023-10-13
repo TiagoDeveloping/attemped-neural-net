@@ -32,7 +32,7 @@ void mapMatrix(Matrix* matrix, double mapMin, double mapMax) {
             matrix->put(x, y, newValue);
         }
     }
-
+    
     delete range;
 }
 

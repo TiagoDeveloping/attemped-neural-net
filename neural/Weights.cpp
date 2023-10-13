@@ -11,6 +11,11 @@
  * @param filename The name of the file to load data from.
  * @return A map that associates keys (strings) with single-dimensional double arrays.
  */
+/**
+ * Load weights from a file.
+ * @param filename The name of the file to load weights from.
+ * @return A map that associates keys (integers) with single-dimensional double arrays.
+ */
 WeightsMap loadWeightsFromFile(const std::string& filename) {
     WeightsMap result; // Initialize the map of weights
 
@@ -20,7 +25,7 @@ WeightsMap loadWeightsFromFile(const std::string& filename) {
         return result; // Return an empty map if the file cannot be opened
     }
 
-    std::string key;
+    int key;
     Weights data; // Use the Weights type as defined in "Weights.hpp"
     std::string line;
 
@@ -38,21 +43,24 @@ WeightsMap loadWeightsFromFile(const std::string& filename) {
                 data.push_back(value);
             }
         } else {
-            if (!key.empty()) {
-                result[key] = data;
+            try {
+                key = std::stoi(line); // Convert the line to an integer key
+                data.clear(); // Clear the data for the new key
+            } catch (const std::invalid_argument& e) {
+                std::cerr << "Error: Invalid key format in the file." << std::endl;
+                continue; // Skip this line and continue with the next one
             }
-            key = line; // Set the new key
-            data.clear(); // Clear the data for the new key
         }
     }
 
-    if (!key.empty()) {
+    if (!data.empty()) {
         result[key] = data;
     }
 
     file.close(); // Close the file
     return result;
 }
+
 
 /**
  * @brief Save single-dimensional double arrays to a file.
@@ -67,11 +75,13 @@ void writeWeightsToFile(const std::string& filename, const WeightsMap& data) {
         for (const auto& entry : data) {
             file << entry.first << "\n";
 
+            file << "\t";
+
             for (const double value : entry.second) {
-                file << "\t" << value << ' ';
+                file << value << ' ';
             }
-            file << '\n';
         }
+        file << "\n";
         file.close(); // Close the file after writing
         std::cout << "Data written to " << filename << std::endl;
     } else {

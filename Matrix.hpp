@@ -100,7 +100,7 @@ class Matrix {
 
             for (int y = 0; y < size; y++) {
                 for (int x = 0; x < size; x++) {
-                    matrix[y][x] = mat[y][x];
+                    put(x, y, mat[y][x]);
                 }
             }
         }

@@ -5,6 +5,7 @@
 
 #include "../Matrix.hpp"
 #include "NeuralUtil.hpp"
+#include "Weights.hpp"
 
 #define LEARNING_RATE 0.01
 

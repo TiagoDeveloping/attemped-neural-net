@@ -4,3 +4,4 @@ build/
 CMakeLists.txt
 .DS_Store
 data/
+.vscode/
