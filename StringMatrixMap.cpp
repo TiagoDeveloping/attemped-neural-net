@@ -12,7 +12,7 @@ StringMatrixMap loadMatricesFromFile(std::string& filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
         std::cerr << "Error: Could not open the file." << std::endl;
-        return result; // Return an empty map if the file cannot be opened
+        return result;
     }
 
     std::string key;
@@ -21,11 +21,10 @@ StringMatrixMap loadMatricesFromFile(std::string& filename) {
 
     while (std::getline(file, line)) {
         if (line.empty()) {
-            continue; // Skip empty lines
+            continue;
         }
 
         if (line[0] == '\t') {
-            // Assuming lines starting with a tab character '\t' indicate data lines
             std::vector<double> row;
             double value;
             std::istringstream ss(line);
@@ -39,8 +38,8 @@ StringMatrixMap loadMatricesFromFile(std::string& filename) {
             if (!key.empty()) {
                 result[key] = data;
             }
-            key = line; // Set the new key
-            data.clear(); // Clear the data for the new key
+            key = line;
+            data.clear();
         }
     }
 

@@ -17,25 +17,24 @@
  * @return A map that associates keys (integers) with single-dimensional double arrays.
  */
 WeightsMap loadWeightsFromFile(const std::string& filename) {
-    WeightsMap result; // Initialize the map of weights
+    WeightsMap result;
 
-    std::ifstream file(filename); // Open the file for reading
+    std::ifstream file(filename); 
     if (!file.is_open()) {
         std::cerr << "Error: Could not open the file." << std::endl;
-        return result; // Return an empty map if the file cannot be opened
+        return result;
     }
 
     int key;
-    Weights data; // Use the Weights type as defined in "Weights.hpp"
+    Weights data;
     std::string line;
 
     while (std::getline(file, line)) {
         if (line.empty()) {
-            continue; // Skip empty lines
+            continue;
         }
 
         if (line[0] == '\t') {
-            // Assuming lines starting with a tab character '\t' indicate data lines
             double value;
             std::istringstream ss(line);
 
@@ -44,11 +43,11 @@ WeightsMap loadWeightsFromFile(const std::string& filename) {
             }
         } else {
             try {
-                key = std::stoi(line); // Convert the line to an integer key
-                data.clear(); // Clear the data for the new key
+                key = std::stoi(line);
+                data.clear();
             } catch (const std::invalid_argument& e) {
                 std::cerr << "Error: Invalid key format in the file." << std::endl;
-                continue; // Skip this line and continue with the next one
+                continue;
             }
         }
     }
