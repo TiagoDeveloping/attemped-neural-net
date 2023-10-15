@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <stdexcept>
+#include <chrono>
+#include <ctime>
 
 #define STB_IMAGE_IMPLEMENTATION
 
@@ -17,9 +19,13 @@
 #define MATRIX_IMAGE_GRAYSCALE "matrix_image_grayscale"
 
 std::string MATRICES_FILENAME = "matrices";
-std::string WEIGHTS_FILENAME = "weights";
+std::string INPUT_WEIGHTS_FILENAME = "input_weights";
+std::string FIRSTLAYER_WEIGHTS_FILENAME = "first_weights";
+std::string OUTPUT_WEIGHTS_FILENAME = "output_weights";
 
 int main() {
+    std::chrono::system_clock::time_point start_time = std::chrono::system_clock::now();
+
     std::cout << "starting....\n";
 
     StringMatrixMap matrixMap = loadMatricesFromFile(MATRICES_FILENAME);
@@ -36,49 +42,28 @@ int main() {
 
     std::vector<double> singleDimensionalImage = imageMatrix->toSingleDimension();
 
-    WeightsMap weightsMap = loadWeightsFromFile(WEIGHTS_FILENAME);
-    
-    Weights* inputLayerWeights;
-    if (weightsMap.find(0) == weightsMap.end()) {
-        inputLayerWeights = getRandomWeights(singleDimensionalImage.size(), 0, 1);
-        weightsMap[0] = *inputLayerWeights;
-    } else {
-        inputLayerWeights = new Weights;
-        *inputLayerWeights = weightsMap[0];
-    }
 
-    Weights* firstLayerWeights;
-    if (weightsMap.find(1) == weightsMap.end()) {
-        firstLayerWeights = getRandomWeights(singleDimensionalImage.size(), 0, 1);
-        weightsMap[1] = *firstLayerWeights;
-    } else {
-        firstLayerWeights = new Weights;
-        *firstLayerWeights = weightsMap[1];
-    }
+    /*  FIRST LAYER WEIGHTS SETUP */
+    int firstLayer_weightsPerNeuron = singleDimensionalImage.size();
+    std::vector<Neuron> firstLayer = loadNeuronWeightsFromFile(FIRSTLAYER_WEIGHTS_FILENAME, firstLayer_weightsPerNeuron, singleDimensionalImage.size(), 0, 255);
 
-    Weights* outputLayerWeights;
-    if (weightsMap.find(2) == weightsMap.end()) {
-        outputLayerWeights = getRandomWeights(4, 0, 1);
-        weightsMap[2] = *outputLayerWeights;
-    } else {
-        outputLayerWeights = new Weights;
-        *outputLayerWeights = weightsMap[2];
-    }
+    std::cout << firstLayer.at(0).weights[0] << std::endl;
 
-    writeWeightsToFile(WEIGHTS_FILENAME, weightsMap);
+    // writeWeightsToFile(WEIGHTS_FILENAME, weightsMap);
 
-    double neuron0 = forwardPropagation(singleDimensionalImage, *inputLayerWeights);
+    // double neuron0 = forwardPropagation(singleDimensionalImage, *inputLayerWeights);
 
-    std::cout << "neuron0: " << neuron0 << "\n";
+    // std::cout << "neuron0: " << neuron0 << "\n";
 
-    delete firstLayerWeights;
-    delete outputLayerWeights;
-    delete inputLayerWeights;
     delete imageMatrix;
 
-    writeMatricesToFile(MATRICES_FILENAME, matrixMap);
+    // writeMatricesToFile(MATRICES_FILENAME, matrixMap);
 
-    std::cout << "finished\n";
+    std::chrono::system_clock::time_point end_time = std::chrono::system_clock::now();
+    std::chrono::duration<double> timeDiff = end_time - start_time;
+    double timeDiffSeconds = timeDiff.count();
+    std::cout << "finished... took: " << timeDiffSeconds << " seconds \n";
 
     return 0;
 }
+

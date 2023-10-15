@@ -37,9 +37,34 @@ double* convolute(Matrix* input, Matrix* kernel) {
 double forwardPropagation(const std::vector<double>& input, const Weights& weights) {
     double weighted_sum = weightedSum(input, weights);
 
-    double output = ReLU(weighted_sum);
+    double output = sigmoid(weighted_sum);
 
     return output;
+}
+
+/**
+ * @brief dot product
+ * 
+ * @param a first Weights obj
+ * @param b second Weights obj
+ * @return double 
+ */
+double dot(const Weights& a, const Weights& b) {
+    if (a.size() != b.size()) {
+        // You might want to handle this case based on your requirements.
+        std::cerr << "Error: Vectors must have the same dimension for dot product." << std::endl;
+        return 0.0;
+    }
+
+    double result = 0.0;
+    for (size_t i = 0; i < a.size(); i++) {
+        result += a[i] * b[i];
+    }
+    return result;
+}
+
+double sigmoid(double& value) {
+    return 1.0 / (1.0 + exp(-(value)));
 }
 
 /**
