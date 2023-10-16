@@ -5,7 +5,52 @@
 #include "../Matrix.hpp"
 #include "Weights.hpp"
 
+/**
+ * @brief Do back propagation
+ * 
+ * @param firstLayer_neurons:ptr neurons in first layer
+ * @param outputLayer_neurons:ptr neurson in second layer
+ * @param firstLayer_values values of first layer after propagation
+ * @param outputLayer_values values of output layer after propagation
+ * @param input input values
+ * @param target target output
+ */
+void backwardPropagation(std::vector<Neuron>* hiddenLayer_neurons, std::vector<Neuron>* outputLayer_neurons, std::vector<double>& hiddenLayer_values, std::vector<double>& outputLayer_values, std::vector<double>& input, std::vector<double>& target) {
+    // Calculate output layer errors
+    int outputSize = outputLayer_values.size();
+    std::vector<double> output_errors(outputSize);
+    for (int i = 0; i < outputSize; ++i) {
+        output_errors[i] = target[i] - outputLayer_values[i];
+        // Apply activation function derivative here, e.g., sigmoid derivative
+        output_errors[i] *= outputLayer_values[i] * (1.0 - outputLayer_values[i]);
+    }
 
+    // Calculate hidden layer errors
+    int hiddenSize = hiddenLayer_values.size();
+    std::vector<double> hidden_errors(hiddenSize);
+    for (int i = 0; i < hiddenSize; ++i) {
+        hidden_errors[i] = 0;
+        for (int j = 0; j < outputSize; ++j) {
+            hidden_errors[i] += output_errors[j] * outputLayer_neurons->at(j).weights[i];
+        }
+        // Apply activation function derivative here, e.g., sigmoid derivative
+        hidden_errors[i] *= hiddenLayer_values[i] * (1.0 - hiddenLayer_values[i]);
+    }
+
+    // Update output weights
+    for (int i = 0; i < outputSize; ++i) {
+        for (int j = 0; j < hiddenSize; ++j) {
+            outputLayer_neurons->at(i).weights[j] += LEARNING_RATE * output_errors[i] * hiddenLayer_values[j];
+        }
+    }
+
+    // Update hidden weights
+    for (int i = 0; i < hiddenSize; ++i) {
+        for (int j = 0; j < input.size(); ++j) {
+            hiddenLayer_neurons->at(i).weights[j] += LEARNING_RATE * hidden_errors[i] * input[j];
+        }
+    }
+}
 
 /**
  * @brief Convluates the values
