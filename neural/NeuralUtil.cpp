@@ -10,10 +10,10 @@
  * @param b1:double max weight value
  * @return std::vector<Neuron> 
  */
-std::vector<Neuron> loadNeuronWeightsFromFile(std::string& filename, int amountOfNeurons, size_t amountOfWeightsPerNeuron, double b0, double b1) {
+std::vector<Neuron>* loadNeuronWeightsFromFile(std::string& filename, int amountOfNeurons, size_t amountOfWeightsPerNeuron, double b0, double b1) {
     WeightsMap layer_weightsMap = loadWeightsFromFile(filename);
 
-    std::vector<Neuron> layer;
+    std::vector<Neuron>* layer = new std::vector<Neuron>;
 
     for (int i = 0; i < amountOfNeurons; i++) {
         Neuron n;
@@ -28,11 +28,11 @@ std::vector<Neuron> loadNeuronWeightsFromFile(std::string& filename, int amountO
         }
 
         n.weights = *weights;
-        layer.insert(layer.begin() + i, n);
+        layer->insert(layer->begin() + i, n);
 
         delete weights;
     }
 
-    writeWeightsToFile(filename, layer_weightsMap);
+    // writeWeightsToFile(filename, layer_weightsMap);
     return layer;
 }

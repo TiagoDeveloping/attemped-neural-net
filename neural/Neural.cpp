@@ -27,6 +27,14 @@ double* convolute(Matrix* input, Matrix* kernel) {
     return val;
 }
 
+double ReLU(double value) {
+    if (value < 0) {
+        return 0;
+    } else {
+        return value;
+    }
+}
+
 /**
  * @brief Propegate single neuron forward.
  * 
@@ -37,7 +45,7 @@ double* convolute(Matrix* input, Matrix* kernel) {
 double forwardPropagation(const std::vector<double>& input, const Weights& weights) {
     double weighted_sum = weightedSum(input, weights);
 
-    double output = sigmoid(weighted_sum);
+    double output = ReLU(weighted_sum);
 
     return output;
 }
@@ -61,10 +69,6 @@ double dot(const Weights& a, const Weights& b) {
         result += a[i] * b[i];
     }
     return result;
-}
-
-double sigmoid(double& value) {
-    return 1.0 / (1.0 + exp(-(value)));
 }
 
 /**

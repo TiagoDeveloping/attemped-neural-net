@@ -6,14 +6,6 @@
 
 #include "Neural.hpp"
 
-std::vector<Neuron> loadNeuronWeightsFromFile(std::string& filename, int amountOfNeurons, size_t amountOfWeightsPerNeuron, double b0, double b1);
-
-inline double ReLU(double value) {
-    if (value < 0) {
-        return 0;
-    } else {
-        return value;
-    }
-};
+std::vector<Neuron>* loadNeuronWeightsFromFile(std::string& filename, int amountOfNeurons, size_t amountOfWeightsPerNeuron, double b0, double b1);
 
 #endif
