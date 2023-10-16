@@ -10,7 +10,6 @@
 
 typedef struct {
     Weights weights;
-    double bias;
 } Neuron;
 
 double* convolute(Matrix* input, Matrix* kernel);

@@ -5,6 +5,14 @@
 #include "../Matrix.hpp"
 #include "Weights.hpp"
 
+double relu_derivative(double x) {
+    if (x > 0) {
+        return 1.0; // The derivative of ReLU when x > 0 is 1.
+    } else {
+        return 0.0; // The derivative of ReLU when x <= 0 is 0.
+    }
+}
+
 /**
  * @brief Do back propagation
  * 
@@ -22,7 +30,7 @@ void backwardPropagation(std::vector<Neuron>* hiddenLayer_neurons, std::vector<N
     for (int i = 0; i < outputSize; ++i) {
         output_errors[i] = target[i] - outputLayer_values[i];
         // Apply activation function derivative here, e.g., sigmoid derivative
-        output_errors[i] *= outputLayer_values[i] * (1.0 - outputLayer_values[i]);
+        output_errors[i] *= outputLayer_values[i] * relu_derivative(outputLayer_values[i]);
     }
 
     // Calculate hidden layer errors
@@ -31,6 +39,10 @@ void backwardPropagation(std::vector<Neuron>* hiddenLayer_neurons, std::vector<N
     for (int i = 0; i < hiddenSize; ++i) {
         hidden_errors[i] = 0;
         for (int j = 0; j < outputSize; ++j) {
+            // double oe = output_errors[j];
+            // Neuron n = outputLayer_neurons->at(j);
+            // double w = n.weights[i];
+            // hidden_errors[i] += oe * w;
             hidden_errors[i] += output_errors[j] * outputLayer_neurons->at(j).weights[i];
         }
         // Apply activation function derivative here, e.g., sigmoid derivative

@@ -22,11 +22,11 @@
 #define ANSI_COLOR_RESET   "\x1b[0m"
 #define ANSI_COLOR_BOLD    "\x1b[1m"
 
-#define MATRIX_IMAGE_GRAYSCALE "matrix_image_grayscale"
 typedef std::chrono::system_clock::time_point Time;
 
 std::vector<double> squareOutput(4);
 
+std::string MATRIX_IMAGE_GRAYSCALE = "matrix_image_grayscale";
 std::string MATRICES_FILENAME = "matrices";
 std::string INPUT_WEIGHTS_FILENAME = "input_weights";
 std::string FIRSTLAYER_WEIGHTS_FILENAME = "first_weights";
@@ -42,17 +42,17 @@ void setup() {
 void printTimeDiff(Time start, std::string msg) {
     Time end_time = std::chrono::system_clock::now();
     std::chrono::system_clock::duration timeDiff = end_time - start;
-    double timeDiffSeconds = timeDiff.count();
-    std::cout << msg << " took: " << timeDiffSeconds << " seconds \n";
+    double timeDiffSeconds = std::chrono::duration<double>(timeDiff).count();
+    std::cout << ANSI_COLOR_GREEN << msg << " took: " << ANSI_COLOR_BOLD << timeDiffSeconds << ANSI_COLOR_RESET << ANSI_COLOR_GREEN << " seconds \n" << ANSI_COLOR_RESET;
 }
 
 int main() {
     std::chrono::system_clock::time_point start_time = std::chrono::system_clock::now();
     std::chrono::system_clock::time_point sstart_time = std::chrono::system_clock::now();
 
-    std::cout << "starting....\n";
+    std::cout << ANSI_COLOR_BLUE << "starting... \n" << ANSI_COLOR_RESET;
     setup();
-    std::cout << "loading image....\n";
+    std::cout << ANSI_COLOR_BLUE << "loading image....\n" << ANSI_COLOR_RESET;
 
     StringMatrixMap matrixMap = loadMatricesFromFile(MATRICES_FILENAME);
 
@@ -66,13 +66,15 @@ int main() {
     }
     mapMatrix(imageMatrix, 0, 1);
 
+    writeMatricesToFile(MATRICES_FILENAME, matrixMap);
+
     std::vector<double> singleDimensionalImage = imageMatrix->toSingleDimension();
 
     printTimeDiff(start_time, "finished loading image matrices");
 
     /*  FIRST LAYER WEIGHTS SETUP */
     start_time = std::chrono::system_clock::now();
-    std::cout << "loading first layer weights...\n";
+    std::cout << ANSI_COLOR_BLUE << "loading first layer weights...\n" << ANSI_COLOR_RESET;
 
     int firstLayer_weightsPerNeuron = singleDimensionalImage.size();
     std::vector<Neuron>* firstLayer_neurons = loadNeuronWeightsFromFile(FIRSTLAYER_WEIGHTS_FILENAME, firstLayer_weightsPerNeuron, singleDimensionalImage.size(), 0, 1);
@@ -83,7 +85,7 @@ int main() {
 
     /* OUTPUT LAYER WEIGHTS SETUP */
     start_time = std::chrono::system_clock::now();
-    std::cout << "loading output layer weights...\n";
+    std::cout << ANSI_COLOR_BLUE << "loading output layer weights...\n" << ANSI_COLOR_RESET;
 
     int outputLayer_weightsPerNeuron = firstLayer_neurons->size();
     std::vector<Neuron>* outputLayer_neurons = loadNeuronWeightsFromFile(OUTPUT_WEIGHTS_FILENAME, 4, outputLayer_weightsPerNeuron, 0, 1);
@@ -93,37 +95,57 @@ int main() {
     printTimeDiff(start_time, "finished loading output layer weights");
 
     bool learning = true;
-    int r = 0;
+    int r = 0;int a = 0;
 
     std::vector<double> firstLayer_values;
     std::vector<double> outputLayer_values;
 
     start_time = std::chrono::system_clock::now();
 
-    /* run 100 iteration of learning */
+    std::cout << ANSI_COLOR_BLUE << "start learning... \n" << ANSI_COLOR_RESET;
+
+    std::cout << ANSI_COLOR_BLUE << "value before: " << ANSI_COLOR_RED << firstLayer_neurons->at(0).weights[0] << "\n" << ANSI_COLOR_RESET;
+
+    /* run 1000 iteration of learning */
     while (learning) {
-        if (r == 99) learning = false;
+        if (a == 10) learning = false;
+        if (r == 100 || r == 99) {
+            std::cout << ANSI_COLOR_GREEN << ANSI_COLOR_BOLD << "SAVING FILES" << ANSI_COLOR_RESET << std::endl;
+            WeightsMap map = getWeightsMapFromNeurons(firstLayer_neurons);
+            writeWeightsToFile(FIRSTLAYER_WEIGHTS_FILENAME, map);
+
+            map = getWeightsMapFromNeurons(outputLayer_neurons);
+            writeWeightsToFile(OUTPUT_WEIGHTS_FILENAME, map);
+            r = 0;
+            a++;
+        }
         /* first layer */
         for (int i = 0; i < firstLayer_neurons->size(); i++) {
-            firstLayer_values.insert(firstLayer_values.begin() + i, forwardPropagation(singleDimensionalImage, firstLayer_neurons->at(i).weights));
+            firstLayer_values.insert(firstLayer_values.end(), forwardPropagation(singleDimensionalImage, firstLayer_neurons->at(i).weights));
         }
-        std::cout << std::endl;
 
         /* output layer */
         for (int i = 0; i < outputLayer_neurons->size(); i++) {
-            outputLayer_values.insert(outputLayer_values.begin() + i, forwardPropagation(firstLayer_values, outputLayer_neurons->at(i).weights));
+            outputLayer_values.insert(outputLayer_values.end(), forwardPropagation(firstLayer_values, outputLayer_neurons->at(i).weights));
         }
 
         for (double d : outputLayer_values) {
             std::cout << d << "\n";
         }
+        std::cout << "\n";
 
         /* BACKWARD */
         backwardPropagation(firstLayer_neurons, outputLayer_neurons, firstLayer_values, outputLayer_values, singleDimensionalImage, squareOutput);
+        firstLayer_values.clear();
+        firstLayer_values.shrink_to_fit();
+        outputLayer_values.clear();
+        outputLayer_values.shrink_to_fit();
         r++;
     }
 
-    printTimeDiff(start_time, "forward propagate..");
+    printTimeDiff(start_time, "finished learning");
+
+    std::cout << ANSI_COLOR_BLUE << "value after: " << ANSI_COLOR_RED << firstLayer_neurons->at(0).weights[0] << "\n" << ANSI_COLOR_RESET;
 
     delete firstLayer_neurons;
     delete outputLayer_neurons;

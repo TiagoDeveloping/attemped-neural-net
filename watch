@@ -1,0 +1,18 @@
+#!/bin/bash
+
+process_name="Neural"
+
+while true; do
+    pid=$(pgrep -f "$process_name")
+    if [ -n "$pid" ]; then
+        memory_in_mb=$(smem -r -n -p $pid -c "name rss" | awk -v name="$process_name" 'NR>1 {print "process: " name ", memory: " $2/1024 " MB"}')
+        if [ -n "$memory_in_mb" ]; then
+            echo "$memory_in_mb"
+        else
+            echo "Memory information not found for $process_name"
+        fi
+    else
+        echo "Process not found"
+    fi
+    sleep 1
+done

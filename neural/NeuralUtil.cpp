@@ -28,11 +28,28 @@ std::vector<Neuron>* loadNeuronWeightsFromFile(std::string& filename, int amount
         }
 
         n.weights = *weights;
-        layer->insert(layer->begin() + i, n);
+        layer->insert(layer->end(), n);
 
         delete weights;
     }
 
-    // writeWeightsToFile(filename, layer_weightsMap);
+    writeWeightsToFile(filename, layer_weightsMap);
     return layer;
+}
+
+/**
+ * @brief Get the Weights Map From Neurons object
+ * 
+ * @param layer 
+ * @return WeightsMap 
+ */
+WeightsMap getWeightsMapFromNeurons(const std::vector<Neuron>* layer) {
+    WeightsMap layer_weightsMap;
+
+    for (size_t i = 0; i < layer->size(); i++) {
+        const Neuron& neuron = (*layer)[i];
+        layer_weightsMap[i] = neuron.weights;
+    }
+
+    return layer_weightsMap;
 }
