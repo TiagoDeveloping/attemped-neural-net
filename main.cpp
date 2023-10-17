@@ -77,7 +77,7 @@ int main() {
     std::cout << ANSI_COLOR_BLUE << "loading first layer weights...\n" << ANSI_COLOR_RESET;
 
     int firstLayer_weightsPerNeuron = singleDimensionalImage.size();
-    std::vector<Neuron>* firstLayer_neurons = loadNeuronWeightsFromFile(FIRSTLAYER_WEIGHTS_FILENAME, firstLayer_weightsPerNeuron, singleDimensionalImage.size(), 0, 1);
+    std::vector<Neuron>* firstLayer_neurons = loadNeuronWeightsFromFile(FIRSTLAYER_WEIGHTS_FILENAME, firstLayer_weightsPerNeuron, singleDimensionalImage.size(), 0, 0.0000001);
 
     std::cout << firstLayer_neurons->at(0).weights[0] << std::endl;
 
@@ -88,7 +88,7 @@ int main() {
     std::cout << ANSI_COLOR_BLUE << "loading output layer weights...\n" << ANSI_COLOR_RESET;
 
     int outputLayer_weightsPerNeuron = firstLayer_neurons->size();
-    std::vector<Neuron>* outputLayer_neurons = loadNeuronWeightsFromFile(OUTPUT_WEIGHTS_FILENAME, 4, outputLayer_weightsPerNeuron, 0, 1);
+    std::vector<Neuron>* outputLayer_neurons = loadNeuronWeightsFromFile(OUTPUT_WEIGHTS_FILENAME, 4, outputLayer_weightsPerNeuron, 0, 0.0000001);
 
     std::cout << outputLayer_neurons->at(0).weights[0] << std::endl;
 

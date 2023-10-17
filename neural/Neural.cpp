@@ -12,6 +12,10 @@ double relu_derivative(double x) {
         return 0.0; // The derivative of ReLU when x <= 0 is 0.
     }
 }
+double sigmoid_derivative(double x) {
+    double s = sigmoid(x);
+    return s * (1.0 - s);
+}
 
 /**
  * @brief Do back propagation
@@ -30,7 +34,8 @@ void backwardPropagation(std::vector<Neuron>* hiddenLayer_neurons, std::vector<N
     for (int i = 0; i < outputSize; ++i) {
         output_errors[i] = target[i] - outputLayer_values[i];
         // Apply activation function derivative here, e.g., sigmoid derivative
-        output_errors[i] *= outputLayer_values[i] * relu_derivative(outputLayer_values[i]);
+
+        output_errors[i] *= outputLayer_values[i] * sigmoid_derivative(outputLayer_values[i]);
     }
 
     // Calculate hidden layer errors
@@ -46,7 +51,7 @@ void backwardPropagation(std::vector<Neuron>* hiddenLayer_neurons, std::vector<N
             hidden_errors[i] += output_errors[j] * outputLayer_neurons->at(j).weights[i];
         }
         // Apply activation function derivative here, e.g., sigmoid derivative
-        hidden_errors[i] *= hiddenLayer_values[i] * (1.0 - hiddenLayer_values[i]);
+        hidden_errors[i] *= hiddenLayer_values[i] * sigmoid_derivative(hiddenLayer_values[i]);
     }
 
     // Update output weights
@@ -102,7 +107,7 @@ double ReLU(double value) {
 double forwardPropagation(const std::vector<double>& input, const Weights& weights) {
     double weighted_sum = weightedSum(input, weights);
 
-    double output = ReLU(weighted_sum);
+    double output = sigmoid(weighted_sum);
 
     return output;
 }
@@ -140,10 +145,14 @@ double weightedSum(const std::vector<double>& input, const Weights& weights) {
         throw std::runtime_error("Input size does not match weight size.");
     }
 
-    double sum = 0.0;
+    double sum = 0.0;  // The running sum
+    double c = 0.0;    // The compensation for lost low-order bits
 
     for (size_t i = 0; i < input.size(); i++) {
-        sum += input[i] * weights[i];
+        double y = input[i] * weights[i] - c;   // Corrected input
+        double t = sum + y;                    // New sum
+        c = (t - sum) - y;                     // Recompute compensation
+        sum = t;                               // Update the sum
     }
 
     return sum;
