@@ -6,6 +6,7 @@
 #include <stdexcept>
 #include <chrono>
 #include <ctime>
+#include <ios>
 
 #define STB_IMAGE_IMPLEMENTATION
 
@@ -47,7 +48,7 @@ void setup() {
     ellipsOutput[3] = 0; // triangle
 
     triangleOutput[0] = 0; // other
-    triangleOutput[1] = 1; // rectangle
+    triangleOutput[1] = 0; // rectangle
     triangleOutput[2] = 0; // ellips/circle
     triangleOutput[3] = 1; // triangle
 
@@ -184,6 +185,10 @@ int main() {
         singleDimensionalImage = getNextImageArray(inputFileStream, "../data/"+name);
         std::vector<double> target = getTarget(name);
 
+        if (name == "") {
+            inputFileStream.seekg (0, std::ios::end);
+        }
+
         if (target.size() != 4) {
             continue;
         }
@@ -199,9 +204,10 @@ int main() {
         }
 
         std::cout << "\033[5A" << name << "\n";
-        for (double d : outputLayer_values) {
-            std::cout << d << "\n";
-        }
+        std::cout << outputLayer_values[0] << "\r \033[15C --> " << target[0] << "\n";
+        std::cout << outputLayer_values[1] << "\r \033[15C --> " << target[1] << "\n";
+        std::cout << outputLayer_values[2] << "\r \033[15C --> " << target[2] << "\n";
+        std::cout << outputLayer_values[3] << "\r \033[15C --> " << target[3] << "\n";
 
         /* BACKWARD */
         backwardPropagation(firstLayer_neurons, outputLayer_neurons, firstLayer_values, outputLayer_values, singleDimensionalImage, target);
