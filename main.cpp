@@ -163,6 +163,8 @@ int main() {
 
     std::cout << ANSI_COLOR_BLUE << "value before: " << ANSI_COLOR_RED << firstLayer_neurons->at(0).weights[0] << "\n" << ANSI_COLOR_RESET;
 
+    std::cout << "\n\n\n\n\n";
+
     /* run 1000 iteration of learning */
     while (learning) {
         if (a == 10) learning = false;
@@ -173,6 +175,7 @@ int main() {
 
             map = getWeightsMapFromNeurons(outputLayer_neurons);
             writeWeightsToFile(OUTPUT_WEIGHTS_FILENAME, map);
+            std::cout << "\n\n\n\n\n";
             r = 0;
             a++;
         }
@@ -195,11 +198,10 @@ int main() {
             outputLayer_values.insert(outputLayer_values.end(), forwardPropagation(firstLayer_values, outputLayer_neurons->at(i).weights));
         }
 
-        std::cout << "\033[4A";
+        std::cout << "\033[5A" << name << "\n";
         for (double d : outputLayer_values) {
             std::cout << d << "\n";
         }
-        std::cout << "\n";
 
         /* BACKWARD */
         backwardPropagation(firstLayer_neurons, outputLayer_neurons, firstLayer_values, outputLayer_values, singleDimensionalImage, target);
