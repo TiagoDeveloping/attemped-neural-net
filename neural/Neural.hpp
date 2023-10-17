@@ -6,7 +6,7 @@
 #include "../Matrix.hpp"
 #include "Weights.hpp"
 
-#define LEARNING_RATE 0.000001
+#define LEARNING_RATE 0.01
 
 typedef struct {
     Weights weights;
@@ -15,7 +15,8 @@ typedef struct {
 double* convolute(Matrix* input, Matrix* kernel);
 
 double dot(const Weights& a, const Weights& b);
-double sigmoid(double& value);
+double sigmoid_derivative(double x);
+double sigmoid(double x);
 double weightedSum(const std::vector<double>& input, const Weights& weights);
 
 double forwardPropagation(const std::vector<double>& input, const Weights& weights);
