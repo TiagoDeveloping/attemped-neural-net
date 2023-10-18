@@ -32,9 +32,30 @@ std::vector<double> otherOutput(4);
 
 std::string MATRIX_IMAGE_GRAYSCALE = "matrix_image_grayscale";
 std::string MATRICES_FILENAME = "matrices";
-std::string INPUT_WEIGHTS_FILENAME = "input_weights";
+std::string SECONDLAYER_WEIGHTS_FILENAME = "second_weights";
 std::string FIRSTLAYER_WEIGHTS_FILENAME = "first_weights";
 std::string OUTPUT_WEIGHTS_FILENAME = "output_weights";
+
+size_t findIndexOfHighestValue(const std::vector<double>& vec) {
+    if (vec.empty()) {
+        // Handle the case where the vector is empty.
+        // You can throw an exception or return a default value as needed.
+        // In this example, I'm returning 0 as a default.
+        return 0;
+    }
+
+    double highest = vec[0];
+    size_t indexOfHighest = 0;
+
+    for (size_t i = 1; i < vec.size(); ++i) {
+        if (vec[i] > highest) {
+            highest = vec[i];
+            indexOfHighest = i; // Update the index of the highest value.
+        }
+    }
+
+    return indexOfHighest;
+}
 
 void setup() {
     rectangleOutput[0] = 0; // other
@@ -89,8 +110,8 @@ std::vector<double> getTarget(std::string filename) {
         return triangleOutput;
     } else if (startsWith(filename, "rectangle")) {
         return rectangleOutput;
-    } else if (startsWith(filename, "triangle")) {
-        return triangleOutput;
+    } else if (startsWith(filename, "ellipse")) {
+        return ellipsOutput;
     } else if (startsWith(filename, "other")) {
         return otherOutput;
     }
@@ -135,17 +156,28 @@ int main() {
     std::cout << ANSI_COLOR_BLUE << "loading first layer weights...\n" << ANSI_COLOR_RESET;
 
     int firstLayer_weightsPerNeuron = singleDimensionalImage.size();
-    std::vector<Neuron>* firstLayer_neurons = loadNeuronWeightsFromFile(FIRSTLAYER_WEIGHTS_FILENAME, firstLayer_weightsPerNeuron, singleDimensionalImage.size(), 0, 0.01);
+    std::vector<Neuron>* firstLayer_neurons = loadNeuronWeightsFromFile(FIRSTLAYER_WEIGHTS_FILENAME, 490, firstLayer_weightsPerNeuron, 0, 0.01);
 
-    std::cout << firstLayer_neurons->at(0).weights[0] << std::endl;
+    // std::cout << firstLayer_neurons->at(0).weights[0] << std::endl;
 
     printTimeDiff(start_time, "finished loading first layer weights");
+
+    /*  SECOND LAYER WEIGHTS SETUP */
+    start_time = std::chrono::system_clock::now();
+    std::cout << ANSI_COLOR_BLUE << "loading second layer weights...\n" << ANSI_COLOR_RESET;
+
+    int secondLayer_weightsPerNeuron = firstLayer_neurons->size();
+    std::vector<Neuron>* secondLayer_neurons = loadNeuronWeightsFromFile(SECONDLAYER_WEIGHTS_FILENAME, 490, secondLayer_weightsPerNeuron, 0, 0.01);
+
+    // std::cout << secondLayer_neurons->at(0).weights[0] << std::endl;
+
+    printTimeDiff(start_time, "finished loading second layer weights");
 
     /* OUTPUT LAYER WEIGHTS SETUP */
     start_time = std::chrono::system_clock::now();
     std::cout << ANSI_COLOR_BLUE << "loading output layer weights...\n" << ANSI_COLOR_RESET;
 
-    int outputLayer_weightsPerNeuron = firstLayer_neurons->size();
+    int outputLayer_weightsPerNeuron = secondLayer_neurons->size();
     std::vector<Neuron>* outputLayer_neurons = loadNeuronWeightsFromFile(OUTPUT_WEIGHTS_FILENAME, 4, outputLayer_weightsPerNeuron, 0, 0.01);
 
     std::cout << outputLayer_neurons->at(0).weights[0] << std::endl;
@@ -156,27 +188,40 @@ int main() {
     int r = 0;int a = 0;
 
     std::vector<double> firstLayer_values;
+    std::vector<double> secondLayer_values;
     std::vector<double> outputLayer_values;
 
     start_time = std::chrono::system_clock::now();
 
     std::cout << ANSI_COLOR_BLUE << "start learning... \n" << ANSI_COLOR_RESET;
 
-    std::cout << ANSI_COLOR_BLUE << "value before: " << ANSI_COLOR_RED << firstLayer_neurons->at(0).weights[0] << "\n" << ANSI_COLOR_RESET;
+    // std::cout << ANSI_COLOR_BLUE << "value before: " << ANSI_COLOR_RED << firstLayer_neurons->at(0).weights[0] << "\n" << ANSI_COLOR_RESET;
 
     std::cout << "\n\n\n\n\n";
 
+    float accuracy = 0;
+    double heighest = 0;
+
     /* run 1000 iteration of learning */
     while (learning) {
-        if (a == 10) learning = false;
-        if (r == 100 || r == 99) {
+        if (a == 100) learning = false;
+        if (r == 1000) {
+            printTimeDiff(start_time, "finished 1000 runs...");
+            accuracy = accuracy / 10;
+            std::cout << ANSI_COLOR_BOLD << ANSI_COLOR_RED << "accuracy: " << ANSI_COLOR_BLUE << accuracy << "%" << ANSI_COLOR_RESET << "\n";
+            accuracy = 0;
+
             std::cout << ANSI_COLOR_GREEN << ANSI_COLOR_BOLD << "SAVING FILES" << ANSI_COLOR_RESET << std::endl;
             WeightsMap map = getWeightsMapFromNeurons(firstLayer_neurons);
             writeWeightsToFile(FIRSTLAYER_WEIGHTS_FILENAME, map);
 
+            map = getWeightsMapFromNeurons(secondLayer_neurons);
+            writeWeightsToFile(SECONDLAYER_WEIGHTS_FILENAME, map);
+
             map = getWeightsMapFromNeurons(outputLayer_neurons);
             writeWeightsToFile(OUTPUT_WEIGHTS_FILENAME, map);
             std::cout << "\n\n\n\n\n";
+            start_time = std::chrono::system_clock::now();
             r = 0;
             a++;
         }
@@ -198,10 +243,21 @@ int main() {
             firstLayer_values.insert(firstLayer_values.end(), forwardPropagation(singleDimensionalImage, firstLayer_neurons->at(i).weights));
         }
 
+        for (int i = 0; i < secondLayer_neurons->size(); i++) {
+            secondLayer_values.insert(secondLayer_values.end(), forwardPropagation(firstLayer_values, secondLayer_neurons->at(i).weights));
+        }
+
         /* output layer */
         for (int i = 0; i < outputLayer_neurons->size(); i++) {
-            outputLayer_values.insert(outputLayer_values.end(), forwardPropagation(firstLayer_values, outputLayer_neurons->at(i).weights));
+            outputLayer_values.insert(outputLayer_values.end(), forwardPropagation(secondLayer_values, outputLayer_neurons->at(i).weights));
         }
+
+        heighest = 0;
+        for (double d : target) {
+            if (d > heighest) heighest = d;
+        }
+        if (findIndexOfHighestValue(target) == findIndexOfHighestValue(outputLayer_values)) accuracy++;
+        
 
         std::cout << "\033[5A" << name << "\n";
         std::cout << outputLayer_values[0] << "\r \033[15C --> " << target[0] << "\n";
@@ -210,11 +266,14 @@ int main() {
         std::cout << outputLayer_values[3] << "\r \033[15C --> " << target[3] << "\n";
 
         /* BACKWARD */
-        backwardPropagation(firstLayer_neurons, outputLayer_neurons, firstLayer_values, outputLayer_values, singleDimensionalImage, target);
+        // backwardPropagation(firstLayer_neurons, outputLayer_neurons, firstLayer_values, outputLayer_values, singleDimensionalImage, target);
+        backwardPropagation(firstLayer_neurons, secondLayer_neurons, outputLayer_neurons, firstLayer_values, secondLayer_values, outputLayer_values, singleDimensionalImage, target);
         firstLayer_values.clear();
         firstLayer_values.shrink_to_fit();
         outputLayer_values.clear();
         outputLayer_values.shrink_to_fit();
+        secondLayer_values.clear();
+        secondLayer_values.shrink_to_fit();
         r++;
     }
 
@@ -224,6 +283,7 @@ int main() {
 
     delete firstLayer_neurons;
     delete outputLayer_neurons;
+    delete secondLayer_neurons;
     // delete imageMatrix;
 
     printTimeDiff(sstart_time, "full executing took");

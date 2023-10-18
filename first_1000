@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Set the directory path where you want to list files
+directory="data"
+
+# Set the output file
+output_file="first_1000.txt"
+
+# Use the 'find' command to list the first 1000 files and save them to the output file
+find "$directory" -type f | head -n 1000 > "$output_file"
+
+echo "First 1000 file names saved to $output_file"
