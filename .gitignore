@@ -1,6 +1,6 @@
-deprecated/
-build/
-CMakeLists.txt
-.DS_Store
+# deprecated/
+# build/
+# CMakeLists.txt
+# .DS_Store
 data/
-.vscode/
+# .vscode/

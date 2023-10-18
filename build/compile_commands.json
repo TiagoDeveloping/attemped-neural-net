@@ -1,0 +1,44 @@
+[
+{
+  "directory": "/Users/tiago/Documents/Developing/attemped neural net/build",
+  "command": "/usr/bin/clang++  -I\"/Users/tiago/Documents/Developing/attemped neural net\" -g -std=gnu++17 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -o CMakeFiles/Neural.dir/main.cpp.o -c \"/Users/tiago/Documents/Developing/attemped neural net/main.cpp\"",
+  "file": "/Users/tiago/Documents/Developing/attemped neural net/main.cpp",
+  "output": "CMakeFiles/Neural.dir/main.cpp.o"
+},
+{
+  "directory": "/Users/tiago/Documents/Developing/attemped neural net/build",
+  "command": "/usr/bin/clang++  -I\"/Users/tiago/Documents/Developing/attemped neural net\" -g -std=gnu++17 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -o CMakeFiles/Neural.dir/Matrix.cpp.o -c \"/Users/tiago/Documents/Developing/attemped neural net/Matrix.cpp\"",
+  "file": "/Users/tiago/Documents/Developing/attemped neural net/Matrix.cpp",
+  "output": "CMakeFiles/Neural.dir/Matrix.cpp.o"
+},
+{
+  "directory": "/Users/tiago/Documents/Developing/attemped neural net/build",
+  "command": "/usr/bin/clang++  -I\"/Users/tiago/Documents/Developing/attemped neural net\" -g -std=gnu++17 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -o CMakeFiles/Neural.dir/neural/Neural.cpp.o -c \"/Users/tiago/Documents/Developing/attemped neural net/neural/Neural.cpp\"",
+  "file": "/Users/tiago/Documents/Developing/attemped neural net/neural/Neural.cpp",
+  "output": "CMakeFiles/Neural.dir/neural/Neural.cpp.o"
+},
+{
+  "directory": "/Users/tiago/Documents/Developing/attemped neural net/build",
+  "command": "/usr/bin/clang++  -I\"/Users/tiago/Documents/Developing/attemped neural net\" -g -std=gnu++17 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -o CMakeFiles/Neural.dir/Util.cpp.o -c \"/Users/tiago/Documents/Developing/attemped neural net/Util.cpp\"",
+  "file": "/Users/tiago/Documents/Developing/attemped neural net/Util.cpp",
+  "output": "CMakeFiles/Neural.dir/Util.cpp.o"
+},
+{
+  "directory": "/Users/tiago/Documents/Developing/attemped neural net/build",
+  "command": "/usr/bin/clang++  -I\"/Users/tiago/Documents/Developing/attemped neural net\" -g -std=gnu++17 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -o CMakeFiles/Neural.dir/StringMatrixMap.cpp.o -c \"/Users/tiago/Documents/Developing/attemped neural net/StringMatrixMap.cpp\"",
+  "file": "/Users/tiago/Documents/Developing/attemped neural net/StringMatrixMap.cpp",
+  "output": "CMakeFiles/Neural.dir/StringMatrixMap.cpp.o"
+},
+{
+  "directory": "/Users/tiago/Documents/Developing/attemped neural net/build",
+  "command": "/usr/bin/clang++  -I\"/Users/tiago/Documents/Developing/attemped neural net\" -g -std=gnu++17 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -o CMakeFiles/Neural.dir/neural/NeuralUtil.cpp.o -c \"/Users/tiago/Documents/Developing/attemped neural net/neural/NeuralUtil.cpp\"",
+  "file": "/Users/tiago/Documents/Developing/attemped neural net/neural/NeuralUtil.cpp",
+  "output": "CMakeFiles/Neural.dir/neural/NeuralUtil.cpp.o"
+},
+{
+  "directory": "/Users/tiago/Documents/Developing/attemped neural net/build",
+  "command": "/usr/bin/clang++  -I\"/Users/tiago/Documents/Developing/attemped neural net\" -g -std=gnu++17 -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX13.1.sdk -o CMakeFiles/Neural.dir/neural/Weights.cpp.o -c \"/Users/tiago/Documents/Developing/attemped neural net/neural/Weights.cpp\"",
+  "file": "/Users/tiago/Documents/Developing/attemped neural net/neural/Weights.cpp",
+  "output": "CMakeFiles/Neural.dir/neural/Weights.cpp.o"
+}
+]

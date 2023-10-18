@@ -122,6 +122,7 @@ int main() {
     std::chrono::system_clock::time_point start_time = std::chrono::system_clock::now();
     std::chrono::system_clock::time_point sstart_time = std::chrono::system_clock::now();
 
+    // std::ifstream inputFileStream("../data/filenames.txt");
     std::ifstream inputFileStream("../data/filenames.txt");
     if (!inputFileStream.is_open()) {
         std::cerr << "Failed to open the file: " << "../data/filenames.txt" << std::endl;
@@ -180,7 +181,7 @@ int main() {
     int outputLayer_weightsPerNeuron = secondLayer_neurons->size();
     std::vector<Neuron>* outputLayer_neurons = loadNeuronWeightsFromFile(OUTPUT_WEIGHTS_FILENAME, 4, outputLayer_weightsPerNeuron, 0, 0.01);
 
-    std::cout << outputLayer_neurons->at(0).weights[0] << std::endl;
+    // std::cout << outputLayer_neurons->at(0).weights[0] << std::endl;
 
     printTimeDiff(start_time, "finished loading output layer weights");
 
@@ -226,14 +227,15 @@ int main() {
             a++;
         }
 
+        if (inputFileStream.eof()) {
+            // inputFileStream.close();
+            inputFileStream.clear(); // Clear the end-of-file flag
+            inputFileStream.seekg(0, std::ios::beg);
+        }
+
         std::string name = extractNextFilename(inputFileStream);
         singleDimensionalImage = getNextImageArray(inputFileStream, "../data/"+name);
         std::vector<double> target = getTarget(name);
-
-        if (name == "") {
-            inputFileStream.seekg (0, std::ios::end);
-        }
-
         if (target.size() != 4) {
             continue;
         }
