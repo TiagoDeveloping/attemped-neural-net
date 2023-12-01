@@ -1,5 +1,10 @@
 # deprecated/
-build/
+build/CMakeCache.txt
+build/CMakeFiles
+build/Makefile
+build/Neural
+build/cmake_install.cmake
+build/image.png
 # CMakeLists.txt
 # .DS_Store
 data/
