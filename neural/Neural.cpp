@@ -108,7 +108,6 @@ void backwardPropagation(std::vector<Neuron>* hiddenLayer_neurons, std::vector<N
     std::vector<double> output_errors(outputSize);
     for (int i = 0; i < outputSize; ++i) {
         output_errors[i] = target[i] - outputLayer_values[i];
-        // Apply activation function derivative here, e.g., sigmoid derivative
 
         output_errors[i] *= outputLayer_values[i] * sigmoid_derivative(outputLayer_values[i]);
     }
