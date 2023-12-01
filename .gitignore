@@ -4,6 +4,7 @@ build/CMakeFiles
 build/Makefile
 build/Neural
 build/cmake_install.cmake
+Build/.cmake
 build/image.png
 # CMakeLists.txt
 # .DS_Store
