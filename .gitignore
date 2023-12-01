@@ -10,5 +10,5 @@ build/image.png
 # .DS_Store
 data/
 # .vscode/
-data.zip
+# data.zip
 .gitignore
