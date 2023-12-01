@@ -6,7 +6,7 @@
 #include "../Matrix.hpp"
 #include "Weights.hpp"
 
-#define LEARNING_RATE 0.1
+#define LEARNING_RATE 0.01
 
 typedef struct {
     Weights weights;
