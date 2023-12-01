@@ -42,16 +42,15 @@ void backwardPropagation(
     std::vector<double>& input,
     std::vector<double>& target
 ) {
-    // Calculate output layer errors
+    // output layer errors
     int outputSize = outputLayer_values.size();
     std::vector<double> output_errors(outputSize);
     for (int i = 0; i < outputSize; ++i) {
         output_errors[i] = target[i] - outputLayer_values[i];
-        // Apply activation function derivative here, e.g., sigmoid derivative
         output_errors[i] *= outputLayer_values[i] * sigmoid_derivative(outputLayer_values[i]);
     }
 
-    // Calculate hidden layer 2 errors
+    // hidden layer 2 errors
     int hiddenSize2 = hiddenLayer2_values.size();
     std::vector<double> hidden_errors2(hiddenSize2);
     for (int i = 0; i < hiddenSize2; ++i) {
@@ -59,11 +58,10 @@ void backwardPropagation(
         for (int j = 0; j < outputSize; ++j) {
             hidden_errors2[i] += output_errors[j] * outputLayer_neurons->at(j).weights[i];
         }
-        // Apply activation function derivative here, e.g., sigmoid derivative
         hidden_errors2[i] *= hiddenLayer2_values[i] * sigmoid_derivative(hiddenLayer2_values[i]);
     }
 
-    // Calculate hidden layer 1 errors
+    // hidden layer 1 errors
     int hiddenSize1 = hiddenLayer1_values.size();
     std::vector<double> hidden_errors1(hiddenSize1);
     for (int i = 0; i < hiddenSize1; ++i) {
@@ -71,25 +69,22 @@ void backwardPropagation(
         for (int j = 0; j < hiddenSize2; ++j) {
             hidden_errors1[i] += hidden_errors2[j] * hiddenLayer2_neurons->at(j).weights[i];
         }
-        // Apply activation function derivative here, e.g., sigmoid derivative
+        
         hidden_errors1[i] *= hiddenLayer1_values[i] * sigmoid_derivative(hiddenLayer1_values[i]);
     }
 
-    // Update output weights
     for (int i = 0; i < outputSize; ++i) {
         for (int j = 0; j < hiddenSize2; ++j) {
             outputLayer_neurons->at(i).weights[j] += LEARNING_RATE * output_errors[i] * hiddenLayer2_values[j];
         }
     }
 
-    // Update hidden layer 2 weights
     for (int i = 0; i < hiddenSize2; ++i) {
         for (int j = 0; j < hiddenSize1; ++j) {
             hiddenLayer2_neurons->at(i).weights[j] += LEARNING_RATE * hidden_errors2[i] * hiddenLayer1_values[j];
         }
     }
 
-    // Update hidden layer 1 weights
     for (int i = 0; i < hiddenSize1; ++i) {
         for (int j = 0; j < input.size(); ++j) {
             hiddenLayer1_neurons->at(i).weights[j] += LEARNING_RATE * hidden_errors1[i] * input[j];
@@ -109,7 +104,6 @@ void backwardPropagation(
  * @param target target output
  */
 void backwardPropagation(std::vector<Neuron>* hiddenLayer_neurons, std::vector<Neuron>* outputLayer_neurons, std::vector<double>& hiddenLayer_values, std::vector<double>& outputLayer_values, std::vector<double>& input, std::vector<double>& target) {
-    // Calculate output layer errors
     int outputSize = outputLayer_values.size();
     std::vector<double> output_errors(outputSize);
     for (int i = 0; i < outputSize; ++i) {
@@ -119,7 +113,6 @@ void backwardPropagation(std::vector<Neuron>* hiddenLayer_neurons, std::vector<N
         output_errors[i] *= outputLayer_values[i] * sigmoid_derivative(outputLayer_values[i]);
     }
 
-    // Calculate hidden layer errors
     int hiddenSize = hiddenLayer_values.size();
     std::vector<double> hidden_errors(hiddenSize);
     for (int i = 0; i < hiddenSize; ++i) {
@@ -131,18 +124,18 @@ void backwardPropagation(std::vector<Neuron>* hiddenLayer_neurons, std::vector<N
             // hidden_errors[i] += oe * w;
             hidden_errors[i] += output_errors[j] * outputLayer_neurons->at(j).weights[i];
         }
-        // Apply activation function derivative here, e.g., sigmoid derivative
+        
         hidden_errors[i] *= hiddenLayer_values[i] * sigmoid_derivative(hiddenLayer_values[i]);
     }
 
-    // Update output weights
+
     for (int i = 0; i < outputSize; ++i) {
         for (int j = 0; j < hiddenSize; ++j) {
             outputLayer_neurons->at(i).weights[j] += LEARNING_RATE * output_errors[i] * hiddenLayer_values[j];
         }
     }
 
-    // Update hidden weights
+
     for (int i = 0; i < hiddenSize; ++i) {
         for (int j = 0; j < input.size(); ++j) {
             hiddenLayer_neurons->at(i).weights[j] += LEARNING_RATE * hidden_errors[i] * input[j];
