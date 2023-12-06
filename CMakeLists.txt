@@ -6,12 +6,12 @@ project(Neural)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-configure_file(image.png ${CMAKE_CURRENT_BINARY_DIR}/image.png COPYONLY)
+# configure_file(image.png ${CMAKE_CURRENT_BINARY_DIR}/image.png COPYONLY)
 # configure_file(resources/matrices ${CMAKE_CURRENT_BINARY_DIR}/matrices COPYONLY)
 
 # Add your source files
 set(SOURCES
-    main.cpp
+    main_analyze.cpp
     Matrix.cpp
     # neural/Kernel.cpp
     neural/Neural.cpp
